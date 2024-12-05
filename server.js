@@ -5,13 +5,13 @@ const express = require("express");
 const app= express();
 const session = require("express-session");
 const passUserToView = require("./middleware/path-user-to-view");
-
+const router = require('express').Router();
 const mongoose = require("mongoose");
 const methodOverride=require("method-override");
 const morgan = require("morgan");
 
 //port configuration
-const port = process.env.port? process.env.port: "3000";
+const port = process.env.port? process.env.port: "4000";
 
 //db connection
 mongoose.connect(process.env.MONGODB_URI);
@@ -31,13 +31,19 @@ app.use(session({
     saveUninitialized: true
 }))
 
-app.use(passUserToView);
 
 //Require controllers
 const authCtrl = require("./controllers/auth");
+const recipesCtrl = require('./controllers/recipes.js');
+const ingredientsCtrl = require('./controllers/ingredients.js');
 const isSignedIn = require('./middleware/is-signed-in');
 
+
+app.use(isSignedIn);
+app.use(passUserToView);
 app.use("/auth", authCtrl);
+app.use('/recipes', recipesCtrl);
+app.use('/ingredients', ingredientsCtrl);
 
 //port route
 app.get('/', async (req,res)=>
@@ -55,3 +61,4 @@ app.listen(port, ()=>
 {
     console.log("Listening on port:", port);
 })
+module.exports = router;

@@ -1,0 +1,18 @@
+<body>
+  <%- include('../partials/_navbar') %>
+  <h1><%= user.username %> recipes are: </h1>
+
+  <% if (recipes.length > 0) { %>
+  <div>
+    <ul>
+      <% recipes.forEach(recipe => { %>
+      <li>
+        <a href="/recipes/<%= recipe._id %>"><%= recipe.name %></a>
+      </li>
+      <% }) %>
+    </ul>
+  </div>
+  <% } else { %>
+  <p><%= user.username %> has yet to create a recipe.</p>
+  <% } %>
+</body>
